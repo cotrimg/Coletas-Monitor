@@ -103,18 +103,16 @@ async function salvarColeta() {
     });
 
     if (response.ok) {
-      // 1. Ocupa o primeiro slot (Ex: 12:00)
       slotSelecionado.className = 'bg-red-500 text-white p-2 rounded';
       slotSelecionado.innerText = `${coleta.inicio} - Ocupado (${cliente})`;
       slotSelecionado.dataset.cliente = cliente;
       slotSelecionado.dataset.transportadora = transportadora;
       slotSelecionado.dataset.obs = obs;
 
-      // 2. Busca e ocupa o segundo slot de forma exata pela hora final (Ex: 13:00)
       const todosSlots = coluna.querySelectorAll('div');
       todosSlots.forEach(slot => {
         if (slot.innerText.startsWith(coleta.fim)) {
-          slot.className = 'bg-red-400 text-white p-2 rounded'; // Vermelho mais claro indicando término
+          slot.className = 'bg-red-400 text-white p-2 rounded'; 
           slot.innerText = `${coleta.fim} - Ocupado (${cliente})`;
           slot.dataset.cliente = cliente;
           slot.dataset.transportadora = transportadora;
@@ -128,7 +126,6 @@ async function salvarColeta() {
     console.error('Erro ao salvar coleta:', error);
   }
 }
-
 
 
 async function carregarColetas() {
@@ -189,13 +186,11 @@ function mostrarCard(slot) {
   `;
   document.body.appendChild(card);
 
-  // animação de fade-in
   requestAnimationFrame(() => {
     card.classList.remove('opacity-0');
     card.classList.add('opacity-100');
   });
 
-  // desaparece suavemente após 3s
   setTimeout(() => {
     card.classList.remove('opacity-100');
     card.classList.add('opacity-0');
