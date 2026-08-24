@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coletas | ARB</title>
+    <!-- importy tailwind  -->
+     <script src="https://cdn.tailwindcss.com"></script>
+     <script src="./jss/script.js" defer></script>
+     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body class="flex bg-gray-100">
+    <aside class="w-64 h-screen bg-blue-700 text-white flex flex-col justify-between p-4">
+        <div>
+            <h1 class="text-2xl font-bold text-center mb-1">ARaymond</h1>
+            <p class="text-center text-xs opacity-80">MORE THAN FASTENING</p>
+
+            <ul class="space-y-20 mt-20">
+                <li class="flex items-center gap-2 cursor-pointer bg-blue-600 rounded-lg p-2 border-l-4 border-white hover:text-gray-300 transition">
+                    <span class="material-icons text-white text-base">dashboard</span>
+                    <span class="font-semibold">Dashboard</span>
+                </li>
+            </ul>
+        </div>      
+        <!-- rodapé -->
+        <div class="border-t border-blue-500 pt-4 text-xs opacity-80 flex-end">
+            <p>Usuário: <span class="font-semibold">Visitante</span></p>
+            <p>Modo: <span class="font-semibold">Apenas Leitura</span></p>
+        </div>          
+    </aside>
+
+    <main class="flex-1 p-6 overflow-x-auto">
+        <h2 class="text-xl font-bold mb-4">Agendamento de Coletas</h2>
+        <div class="overflow-x-auto overflow-y-auto max-h-[80vh] border rounded-lg p-4 bg-gray-50 shadow-md">
+            <div class="grid grid-cols-6 gap-4 min-w-max" id="semana"></div>
+        </div>
+    </main>
+    <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded shadow-lg w-96">
+            <h3 class="text-lg font-bold mb-4">Agendar Coleta</h3>
+            <input id="cliente" type="text" placeholder="Nome do Cliente" class="border p-2 w-full mb-2">
+            <input id="transportadora" type="text" placeholder="Transportadora (opcional)" class="border p-2 w-full mb-2">
+            <textarea id="obs" placeholder="Observações" class="border p-2 w-full mb-2"></textarea>
+            <div class="flex justify-end gap-2">
+                <button onclick="fecharModal()" class="bg-gray-400 text-white px-4 py-2 rounded">Cancelar</button>
+                <button onclick="salvarColeta()" class="bg-green-600 text-white px-4 py-2 rounded">Salvar</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
