@@ -3,7 +3,8 @@ from pydantic import BaseModel
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from back.coletas import router as coletas_router
+from coletas import router as coletas_router
+
 import os 
 
 app = FastAPI()

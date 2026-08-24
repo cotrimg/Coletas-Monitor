@@ -2,7 +2,7 @@ const semanaContainer = document.getElementById('semana');
 const diasSemana = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
 const horarios = [];
 
-for (let h = 7; h <= 20; h++) {
+for (let h = 7; h <= 23; h++) {
   horarios.push(`${h.toString().padStart(2, '0')}:00`);
 }
 
@@ -84,7 +84,6 @@ async function salvarColeta() {
   const colunaDia = titulo.innerText.split(' ')[0];
   const dataDia = titulo.innerText.match(/\((.*?)\)/)[1];
 
-  // 
   const coleta = {
     id: Date.now(),
     cliente,
@@ -93,10 +92,9 @@ async function salvarColeta() {
     dia: colunaDia,
     data: dataDia,
     inicio: horarioSelecionado,
-    fim: calcularFim(horarioSelecionado)   // 
+    fim: calcularFim(horarioSelecionado)
   };
 
-  // parte back
   try {
     const response = await fetch('http://127.0.0.1:8000/coletas', {
       method: 'POST',
@@ -105,17 +103,24 @@ async function salvarColeta() {
     });
 
     if (response.ok) {
-      // 
+      // 1. Ocupa o primeiro slot (Ex: 12:00)
       slotSelecionado.className = 'bg-red-500 text-white p-2 rounded';
       slotSelecionado.innerText = `${coleta.inicio} - Ocupado (${cliente})`;
+      slotSelecionado.dataset.cliente = cliente;
+      slotSelecionado.dataset.transportadora = transportadora;
+      slotSelecionado.dataset.obs = obs;
 
-      const todosSlots = Array.from(coluna.querySelectorAll('div:not(:first-child)'));
-      const indexAtual = todosSlots.indexOf(slotSelecionado);
-      const proximoSlot = todosSlots[indexAtual + 1];
-      if (proximoSlot) {
-        proximoSlot.className = 'bg-red-400 text-white p-2 rounded';
-        proximoSlot.innerText = `${coleta.fim} - Ocupado (${cliente})`;
-      }
+      // 2. Busca e ocupa o segundo slot de forma exata pela hora final (Ex: 13:00)
+      const todosSlots = coluna.querySelectorAll('div');
+      todosSlots.forEach(slot => {
+        if (slot.innerText.startsWith(coleta.fim)) {
+          slot.className = 'bg-red-400 text-white p-2 rounded'; // Vermelho mais claro indicando término
+          slot.innerText = `${coleta.fim} - Ocupado (${cliente})`;
+          slot.dataset.cliente = cliente;
+          slot.dataset.transportadora = transportadora;
+          slot.dataset.obs = obs;
+        }
+      });
 
       fecharModal();
     }
@@ -123,6 +128,7 @@ async function salvarColeta() {
     console.error('Erro ao salvar coleta:', error);
   }
 }
+
 
 
 async function carregarColetas() {
@@ -134,12 +140,25 @@ async function carregarColetas() {
       const colunas = document.querySelectorAll('#semana > div');
       colunas.forEach(coluna => {
         const titulo = coluna.querySelector('h3').innerText;
+        
         if (titulo.includes(item.data)) {
-          const slots = coluna.querySelectorAll('div:not(:first-child)');
+          const slots = coluna.querySelectorAll('div');
+          
           slots.forEach(slot => {
-            if (slot.innerText.startsWith(item.horario)) {
+            
+            const horaInicio = item.inicio || item.horario;
+           
+            if (slot.innerText.startsWith(horaInicio)) {
               slot.className = 'bg-red-500 text-white p-2 rounded';
-              slot.innerText = `${item.horario} - Ocupado (${item.cliente})`;
+              slot.innerText = `${horaInicio} - Ocupado (${item.cliente})`;
+              slot.dataset.cliente = item.cliente;
+              slot.dataset.transportadora = item.transportadora;
+              slot.dataset.obs = item.obs;
+            }
+        
+            if (item.fim && slot.innerText.startsWith(item.fim)) {
+              slot.className = 'bg-red-400 text-white p-2 rounded';
+              slot.innerText = `${item.fim} - Ocupado (${item.cliente})`;
               slot.dataset.cliente = item.cliente;
               slot.dataset.transportadora = item.transportadora;
               slot.dataset.obs = item.obs;
@@ -152,6 +171,7 @@ async function carregarColetas() {
     console.error('Erro ao carregar coletas:', error);
   }
 }
+
 
 
 function mostrarCard(slot) {
