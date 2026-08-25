@@ -195,7 +195,7 @@ function mostrarCard(slot) {
     card.classList.remove('opacity-100');
     card.classList.add('opacity-0');
     setTimeout(() => card.remove(), 300);
-  }, 3000);
+  }, 1000);
 }
 
 window.onload = carregarColetas;
